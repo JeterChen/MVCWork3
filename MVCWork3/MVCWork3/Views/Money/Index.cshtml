@@ -1,0 +1,91 @@
+﻿@model MVCWork3.Models.ViewModels.MoneyViewModel
+@{
+
+    ViewBag.Title = "Home Page";
+    int pagevalue = 0;
+}
+
+@using (Html.BeginForm())
+{
+
+    @Html.AntiForgeryToken()
+    <div class="well">
+        <div class="form-horizontal">
+            <div class="form-group">
+                @Html.LabelFor(model => Model.Type, "類別", htmlAttributes: new { @class = "col-md-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.DropDownList("Type", (IEnumerable<SelectListItem>)ViewData["CategoryItems"], new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Price, "金額", htmlAttributes: new { @class = "col-md-2 control-label" })
+                <div class="col-sm-10">
+                    @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control", @Value = "", @placeholder = "金額" } })
+                    @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Date, "日期", htmlAttributes: new { @class = " col-md-2 control-label" })
+                <div class="col-sm-10">
+                    @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control", @Value = "", @placeholder = "日期" } })
+                    @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Description, "備註", htmlAttributes: new { @class = " col-md-2 control-label" })
+                <div class="col-sm-10">
+                    @Html.TextAreaFor(model => model.Description, 0, 0, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-11 col-sm-4">
+                    <button onclick="return confirm('是否確定新增');" class="btn btn-default">送出</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@Html.Action("ListAction", "Money", new { page = 100 })
+
+<div class="form-group">
+    <label for="pageList" class="col-sm-2 control-label">頁碼</label>
+    <div class="col-sm-10">
+        @Html.DropDownList("PageList", (IEnumerable<SelectListItem>)ViewData["PageItems"], new { @class = "form-control", @id = "pagelist", @onchange = "pagechange()" })
+
+    </div>
+</div>
+@*不知道為什麼下拉選單有觸發/Money/ListAction但是卻沒有換頁效果*@
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        function pagechange() {
+            var x = document.getElementById("pagelist");
+            x.value = x.value.toUpperCase();
+            $.ajax({
+                url: '/Money/ListAction',
+                Type: "GET",
+                data: { page: x.value },
+                contentType: "application/json; charset=utf-8",
+                dataType: "HTML",
+                success: function (response) {
+                    $("#moneylist").html(response);
+                }
+            });
+        }
+
+        $(function () {
+            $("[data-datetimepicker]").datetimepicker();
+        })
+    </script>
+}
+
+
+

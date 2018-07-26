@@ -1,0 +1,51 @@
+﻿@model MVCWork3.Models.ViewModels.MoneyViewModel
+@using MVCWork3.Extensions
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>MoneryDetail</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayName("類別")
+        </dt>
+
+        <dd>
+            @(Model.Type.GetDisplayName())
+            @*@Html.DisplayFor(model => model.Type.GetDisplayName())*@ @*這樣寫會有bug但我真的解不了*@
+        </dd>
+        <dt>
+            @Html.DisplayName("日期")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("金額")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("備註")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
